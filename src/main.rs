@@ -1,3 +1,4 @@
+use core::num;
 use std::io;
 use rand::Rng;
 use colored::Colorize;
@@ -34,15 +35,19 @@ fn main() {
 fn guess_number() {
     println!("Guess the number");
     let secret_number = rand::thread_rng().gen_range(1..40);
-    let mut guess = String::new();
-
+    
     loop {
-
+        let mut guess = String::new();
+        
         println!("Input your number: ");
         io::stdin().read_line(&mut guess).expect("failed to read read_line");
         
-        let guess = guess.trim().parse::<u32>().expect("Please enter a number");
-        
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        // let guess: u32 = guess.trim().parse::<u32>().expect("Please enter a number");
         // println!("Your guessed {}", guess);
 
 
@@ -57,7 +62,7 @@ fn guess_number() {
         
     }
 
-    println!("You guessed the number {}", secret_number)
+    println!("secret number was {}", secret_number)
         
 
 }
