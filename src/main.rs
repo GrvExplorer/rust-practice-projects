@@ -1,15 +1,15 @@
 // !! other words in rust !! *//
-// Bound, annotated, shadowing, statements (not return just action), expression ( return )
+// Bound, annotated, shadowing, statements (not return just action), expression ( return ), allocation on the heap
 use std::io;
-use rand::{Error, Rng};
+use rand::Rng;
 use colored::Colorize;
 use std::cmp::Ordering;
 
 // *** using Macro ( ! ) ***
 
 // !! Rules for OwnerShip !!
-// ownership => each variable have its owner
-// one variable can have only one owner at time
+// ownership => each value have its owner (variable)
+// one value can have only one owner at time
 // when the owner goes out of scope, the variable get's dropped
 
 // !! Rules for Borrowing/references !! (&)
@@ -18,12 +18,61 @@ use std::cmp::Ordering;
 
 // !! Life Time !! 
 
+/* 
+
+Block comments:
+
+you can document your program here without
+multiple list of adding comments syntax to each line.
+
+*/
+
 fn main() {
-    // guess_number();
+
+    // simple data structure (not follow OwnerShip Rules)
+    let string_str = "Other Guess";
+    let r = string_str;
+
+
+    let some_list = [10, 40, 20, 60];
+    let vc = some_list;
+
+
+    println!("str: {} list: {:?}", string_str, some_list);
+
+    // complex data structure ( follow OwnerShip Rules)
+    let mut other_guess = String::from("Other Guess");
+    other_guess.push_str(", world!");
+    let r = other_guess;
+
+
+    let mut some_vector = vec![10, 40, 20, 60];
+    some_vector.push(40);
+    let vc = some_vector;
+
+
+    println!("String: {} vector: {:?}", r, vc)
+
+    /*
+    
+// guess_number();
     // concatenate();
     // which_marvel_character();
 
     const THREE_TIMES_EIGHT:u32 = 3*8;
+
+    let vector = [10, 20, 30, 40, 50];
+    let _vector1 = vector;
+
+    for x in vector.iter() {
+        // println!("{x}")
+    };
+
+    for num in 1..80 {
+        println!("The Value is: {:#?}", num);
+    };
+
+    // println!("vector is here {:?}", vector);
 
     let a = 98_222;
     let b = 0xff;
@@ -38,13 +87,13 @@ fn main() {
 
     println!("{} {} {} {} {:?} {} {} {:?}", a, b, c, d, e, f, characters, byte);
 
-    // let mut spaces = String::new();
-    // io::stdin().read_line(&mut spaces).expect("Please Inpute Some Spaces!");
+    let mut spaces = String::new();
+    io::stdin().read_line(&mut spaces).expect("Please Inpute Some Spaces!");
 
-    // spaces = "   ".to_string();
-    // let spaces = spaces.len();
+    spaces = "   ".to_string();
+    let spaces = spaces.len();
 
-    // println!("Number of spaces: {}", spaces);
+    println!("Number of spaces: {}", spaces);
 
     // i = signed, u = unsigned
     // i8 (8-bit) -(2^n-1) to 2^n-1 -1 n = number of bits (-128 to 127);
@@ -65,11 +114,14 @@ fn main() {
             r = s; // 1.1.1 have the value "Let's Get Rusty!"
         }
 
-        println!("{r}")
-        // let mut spaces = "   ";
-        // spaces = spaces.len();
+        println!("{r}");
+
+        let spaces = "   ";
+        let spaces: usize = spaces.len();
         
-        // println!("{spaces}")
+        println!("{spaces}")
+
+     */
 
 }
 
