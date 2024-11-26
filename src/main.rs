@@ -1,6 +1,6 @@
 // !! other words in rust !! *//
 // Bound, annotated, shadowing, statements (not return just action), expression ( return ), allocation on the heap
-use std::io;
+use std::{io, string};
 use rand::Rng;
 use colored::Colorize;
 use std::cmp::Ordering;
@@ -13,7 +13,8 @@ use std::cmp::Ordering;
 // when the owner goes out of scope, the variable get's dropped
 
 // !! Rules for Borrowing/references !! (&)
-// Borrowing => you can use mutable variable to change value many times before borrowing for immutable variable. After that use many time for immutable variable
+// Borrowing => you can use mutable variable to change value many times before borrowing for immutable variable ( you can have one mutable references before & after at a given time ). After that use many time for immutable variable (if want to overwrite this don't use immutable variable after declaring mutable or vise versa)
+// at the same time you can not borrow two mutable references
 // References must always be valid ( lifespan of references variable > variable lifespan )
 
 // !! Life Time !! 
@@ -38,20 +39,22 @@ fn main() {
     let vc = some_list;
 
 
-    println!("str: {} list: {:?}", string_str, some_list);
+    // println!("str: {} list: {:?}", string_str, some_list);
 
     // complex data structure ( follow OwnerShip Rules)
     let mut other_guess = String::from("Other Guess");
     other_guess.push_str(", world!");
-    let r = other_guess;
-
+    let r = &mut other_guess;
+    // rule of borrowing is applied here.
+    // let p = &mut other_guess;
 
     let mut some_vector = vec![10, 40, 20, 60];
     some_vector.push(40);
     let vc = some_vector;
 
 
-    println!("String: {} vector: {:?}", r, vc)
+    // println!("String: {} vector: {:?}", r, vc);
+
 
     /*
     
@@ -123,16 +126,64 @@ fn main() {
 
      */
 
+    println!(" ");
+
+    let x =  "Hello world";
+    let y = "some_list";
+    // {
+    //     let s = String::from("some thing to believe in!");
+    //     b = &s;
+    // }
+    // println!("{b}");
+    
+
+    let k = longest(x, y);
+
+    // println!("{k}");
+
+
+    
+    let mut s = String::from("hello");
+
+    let r1 = &s; // no problem
+    let r2 = &s; // no problem
+    // println!("{r1} and {r2} ");
+    // variable r1 and r2 will not be used after this point
+
+    let r3 = &mut s; // no problem
+    // println!("{r3}");
+
+    let mut s = String::from("Hello world");
+    let s2 = "Hello world";
+    let word = first_word(s2);
+    
+    println!("real word:{s} first word:{word}");
+    s2.clear();
+    println!("after clear: real word: {s} first word: {word}");
+
 }
 
 
-// fn longest<'a, >(a: &'a str, b: &'a str) -> &'a str {
-//     if a.len() > b.len() {
-//         a
-//     }else {a
-//         b
-//     }
-// }
+fn longest<'a>(a: &'a str, b: &'a str) -> &'a str { // lifetime parameter => 'a
+    if a.len() > b.len() {
+        a
+    }else {
+        b
+    }
+} // as you are returning a borrowed value (the owner of a & b should have greater lifespan then borrower (if rust does not make sure's this then we will refer the value that is dropped )) for this to not happen we use <'a>
+
+fn first_word(s: &str) -> &str {
+
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' '{
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
 
 #[warn(dead_code)]
 fn guess_number() {
