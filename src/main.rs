@@ -28,6 +28,33 @@ multiple list of adding comments syntax to each line.
 
 */
 
+#[derive(Debug)]
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+
+impl User {
+    fn active(&mut self) {
+        self.active = false;
+    }
+    fn change_username(&mut self, username:String ) {
+        self.username = username;
+    }
+}
+
+#[derive(Debug)]
+struct Borrowed_User<'a> {
+    active: bool,
+    username: &'a str,
+    email: &'a str,
+    sign_in_count: u64,
+}
+
+struct Color(i32, i32, i32, i32);
+
 fn main() {
 
     // simple data structure (not follow OwnerShip Rules)
@@ -154,12 +181,52 @@ fn main() {
     // println!("{r3}");
 
     let mut s = String::from("Hello world");
+    let s1 = "Two String Slice";
     let s2 = "Hello world";
-    let word = first_word(s2);
+    let word = first_word(s2, s1);
     
-    println!("real word:{s} first word:{word}");
+    // println!("real word:{s} first word:{word}");
     s2.clear();
-    println!("after clear: real word: {s} first word: {word}");
+    // println!("after clear: real word: {s} first word: {word}");
+
+
+
+    let borrowed_email = "example@gmail.com";
+    let borrowed_name = "Example Name";
+
+        let mut user1 = User {
+            active: true,
+            username: String::from("someusername123"),
+            email: String::from("someone@example.com"),
+            sign_in_count: 1,
+        };
+
+        // let user2 = User {
+        //     email: String::from("gauravverma19@gmail.com"),
+        //     ..user1,
+        // };
+
+        let user3 = Borrowed_User {
+            active: true,
+            sign_in_count: 1,
+            email: borrowed_email,
+            username: borrowed_name,
+        };
+
+        println!("{user3:#?}");
+
+        dbg!(&user1);
+
+        let new_username = String::from("Gaurav");
+        user1.change_username(new_username);
+
+        dbg!(&user1);
+    
+    let black = Color(0, 0, 0, 0);
+    let white = Color(1, 1, 1, 1);
+
+        // user1.email = String::from("anotheremail@example.com");
+    
 
 }
 
@@ -172,17 +239,18 @@ fn longest<'a>(a: &'a str, b: &'a str) -> &'a str { // lifetime parameter => 'a
     }
 } // as you are returning a borrowed value (the owner of a & b should have greater lifespan then borrower (if rust does not make sure's this then we will refer the value that is dropped )) for this to not happen we use <'a>
 
-fn first_word(s: &str) -> &str {
+fn first_word<'s >(s1: &'s str, s2:&'s str) -> &'s str {
 
-    let bytes = s.as_bytes();
+    let bytes1 = s1.as_bytes();
+    let bytes2 = s2.as_bytes();
 
-    for (i, &item) in bytes.iter().enumerate() {
+    for (i, &item) in bytes2.iter().enumerate() {
         if item == b' '{
-            return &s[0..i];
+            return &s2[..i];
         }
     }
 
-    &s[..]
+    &s1[..]
 }
 
 #[warn(dead_code)]
